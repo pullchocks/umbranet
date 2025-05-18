@@ -18,16 +18,21 @@ class PrivateBrowser:
         print("🌐 Setting up web context...")
         self.web_context = WebKit2.WebContext.get_default()
 
-        print("🧭 Creating web view with ephemeral (private) mode...")
+        print("🧭 Creating web view...")
         self.webview = WebKit2.WebView.new_with_context(self.web_context)
-        self.webview.set_ephemeral(True)
+
+        if hasattr(self.webview, "set_ephemeral"):
+            print("🛡️ Enabling ephemeral (private) mode...")
+            self.webview.set_ephemeral(True)
+        else:
+            print("⚠️ Ephemeral mode not supported in this WebKit version.")
 
         self.scroller = Gtk.ScrolledWindow()
         self.scroller.add(self.webview)
         self.window.add(self.scroller)
 
         print("🔧 Applying proxy settings...")
-        self.set_proxy(use_tor=False)  # Set to True to enable Tor proxy
+        self.set_proxy(use_tor=False)  # Change to True to enable Tor proxy
 
         print("🌍 Loading homepage...")
         self.webview.load_uri("https://www.duckduckgo.com")
